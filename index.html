@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>harpreet 24</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Space+Grotesk:wght@300;400;500&family=Space+Mono:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET & TOKENS ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:        #080505;
+  --surface:   #0f0909;
+  --claret:    #5C2E2E;
+  --claret2:   #7A3D3D;
+  --gold:      #C4956A;
+  --gold-dim:  #8A6040;
+  --cream:     #F5EDE8;
+  --muted:     #8A7570;
+  --whisper:   #3A2828;
+  --font-disp: 'Cormorant Garamond', serif;
+  --font-body: 'Space Grotesk', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ───────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.35;
+}
+
+/* ── HEADER ──────────────────────────────────────────────── */
+header {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(2rem, 6vw, 5rem);
+  overflow: hidden;
+}
+.header-bg-line {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+/* large decorative brand watermark */
+.hero-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-disp);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(14vw, 22vw, 280px);
+  letter-spacing: -0.02em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(196,149,106,0.12);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+/* top nav strip */
+.nav-strip {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem clamp(2rem,6vw,5rem);
+  border-bottom: 1px solid rgba(196,149,106,0.1);
+}
+.nav-logo {
+  font-family: var(--font-disp);
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.nav-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* hero text block */
+.hero-text {
+  position: relative;
+  z-index: 2;
+  max-width: 900px;
+}
+.hero-eyebrow {
+  font-family: var(--font-mono);
+  font-size: clamp(0.55rem, 1.1vw, 0.7rem);
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 2rem;
+  height: 1px;
+  background: var(--gold);
+}
+.hero-name {
+  font-family: var(--font-disp);
+  font-weight: 300;
+  font-size: clamp(4rem, 11vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin-bottom: 2.5rem;
+}
+.hero-name em {
+  font-style: italic;
+  color: var(--gold);
+}
+/* main caption as editorial quote */
+.hero-caption {
+  font-family: var(--font-disp);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1rem, 2.2vw, 1.5rem);
+  line-height: 1.6;
+  color: var(--cream);
+  max-width: 680px;
+  border-left: 2px solid var(--gold-dim);
+  padding-left: 1.5rem;
+  margin-bottom: 3rem;
+}
+/* hashtag flood — signature element */
+.hero-hashtags {
+  font-family: var(--font-mono);
+  font-size: clamp(0.5rem, 0.8vw, 0.6rem);
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  line-height: 1.9;
+  max-width: 100%;
+  word-break: break-all;
+  opacity: 0.7;
+}
+/* scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  right: clamp(2rem,6vw,5rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px;
+  height: 3rem;
+  background: linear-gradient(180deg, var(--gold-dim), transparent);
+  animation: scrollDrop 2s ease-in-out infinite;
+}
+@keyframes scrollDrop {
+  0%,100% { transform: scaleY(1); opacity:1; }
+  50%     { transform: scaleY(0.4); opacity:0.4; }
+}
+
+/* ── TICKER DIVIDER ──────────────────────────────────────── */
+.ticker-strip {
+  width: 100%;
+  overflow: hidden;
+  border-top: 1px solid rgba(196,149,106,0.15);
+  border-bottom: 1px solid rgba(196,149,106,0.15);
+  background: var(--surface);
+  padding: 0.75rem 0;
+  white-space: nowrap;
+}
+.ticker-inner {
+  display: inline-flex;
+  animation: tickerScroll 28s linear infinite;
+}
+.ticker-inner span {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-dim);
+  text-transform: uppercase;
+  padding: 0 3rem;
+}
+.ticker-inner span::after {
+  content: '✦';
+  margin-left: 3rem;
+  color: var(--claret2);
+}
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── GALLERY SECTION ─────────────────────────────────────── */
+.gallery-section {
+  padding: clamp(3rem, 8vw, 6rem) clamp(1.5rem, 4vw, 3.5rem);
+}
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--whisper);
+}
+.gallery-title {
+  font-family: var(--font-disp);
+  font-weight: 300;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  letter-spacing: -0.01em;
+  color: var(--cream);
+}
+.gallery-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+.gallery-count {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+/* MASONRY GRID */
+.masonry {
+  columns: 3 280px;
+  column-gap: 1rem;
+}
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--surface);
+}
+/* subtle border glow */
+.masonry-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(196,149,106,0.08);
+  z-index: 2;
+  pointer-events: none;
+  transition: border-color 0.4s ease;
+}
+.masonry-item:hover::before {
+  border-color: rgba(196,149,106,0.35);
+}
+.masonry-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.6s ease;
+  filter: saturate(0.88) brightness(0.95);
+}
+.masonry-item:hover img {
+  transform: scale(1.035);
+  filter: saturate(1.05) brightness(1.02);
+}
+/* hover overlay */
+.masonry-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(8,5,5,0.88) 100%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.2rem;
+}
+.masonry-item:hover .masonry-overlay { opacity: 1; }
+.overlay-tag {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.overlay-caption {
+  font-family: var(--font-disp);
+  font-style: italic;
+  font-size: 0.9rem;
+  color: var(--cream);
+  line-height: 1.4;
+}
+
+/* large featured item spans full width */
+.masonry-item.featured {
+  column-span: all;
+  margin-bottom: 1rem;
+}
+.masonry-item.featured img {
+  max-height: 70vh;
+  width: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+/* ── LIGHTBOX ────────────────────────────────────────────── */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,5,5,0.97);
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  cursor: zoom-out;
+}
+#lightbox.open { display: flex; }
+#lightbox img {
+  max-width: min(90vw, 560px);
+  max-height: 90svh;
+  object-fit: contain;
+  box-shadow: 0 0 80px rgba(196,149,106,0.12);
+  cursor: default;
+  animation: lbIn 0.3s ease;
+}
+@keyframes lbIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+#lb-close {
+  position: fixed;
+  top: 1.5rem; right: 1.5rem;
+  width: 2.5rem; height: 2.5rem;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(196,149,106,0.3);
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 1rem;
+  transition: background 0.2s;
+  font-family: var(--font-mono);
+}
+#lb-close:hover { background: rgba(196,149,106,0.1); }
+#lb-caption {
+  position: fixed;
+  bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-disp);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-align: center;
+  pointer-events: none;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer {
+  padding: 3rem clamp(2rem,6vw,5rem);
+  border-top: 1px solid var(--whisper);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2rem;
+}
+.footer-brand {
+  font-family: var(--font-disp);
+  font-size: 1.8rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--gold-dim);
+  letter-spacing: 0.05em;
+}
+.footer-ornament {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--claret2);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+}
+.footer-meta {
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  line-height: 2;
+  text-transform: uppercase;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .masonry { columns: 2 140px; column-gap: 0.6rem; }
+  .masonry-item { margin-bottom: 0.6rem; }
+  .masonry-item.featured img { max-height: 55vw; }
+  footer { grid-template-columns: 1fr; text-align: center; }
+  .footer-meta { text-align: center; }
+  .footer-ornament { justify-content: center; }
+  .nav-tag { display: none; }
+}
+@media (max-width: 420px) {
+  .masonry { columns: 1; }
+}
+
+/* ── ENTRANCE ANIMATIONS ─────────────────────────────────── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-line, .ticker-inner { animation: none; }
+  .masonry-item img, .masonry-overlay { transition: none; }
+  .fade-up { opacity: 1; transform: none; transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── LIGHTBOX ── -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <div id="lb-close" role="button" tabindex="0" aria-label="Close">✕</div>
+  <img id="lb-img" src="" alt=""/>
+  <div id="lb-caption"></div>
+</div>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-bg-line"></div>
+  <div class="hero-watermark" aria-hidden="true">harpreet</div>
+
+  <nav class="nav-strip">
+    <div class="nav-logo">harpreet 24</div>
+    <div class="nav-tag">#fitnesslife · #gymlife · ✦</div>
+  </nav>
+
+  <div class="hero-text">
+    <div class="hero-eyebrow">Editorial · Personal Portfolio</div>
+    <h1 class="hero-name">harp<em>reet</em><br/>24</h1>
+    <blockquote class="hero-caption">
+      "Came a long way to be this version of myself ✨"
+    </blockquote>
+    <p class="hero-hashtags">
+      #explorepage✨ #fypppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp #post #fitnesslife #gymlife
+    </p>
+  </div>
+
+  <div class="scroll-hint" aria-hidden="true">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</header>
+
+<!-- ── TICKER ── -->
+<div class="ticker-strip" aria-hidden="true">
+  <div class="ticker-inner">
+    <span>harpreet 24</span><span>fitness life</span><span>gym life</span>
+    <span>explorepage</span><span>unbothered era</span><span>came a long way</span>
+    <span>this version of myself</span><span>editorial</span><span>harpreet 24</span>
+    <span>fitness life</span><span>gym life</span><span>explorepage</span>
+    <span>unbothered era</span><span>came a long way</span><span>this version of myself</span>
+    <span>editorial</span>
+  </div>
+</div>
+
+<!-- ── GALLERY ── -->
+<section class="gallery-section" id="gallery">
+  <div class="gallery-header fade-up">
+    <h2 class="gallery-title">The <em>Edit</em></h2>
+    <span class="gallery-count">07 frames · 2024</span>
+  </div>
+
+  <div class="masonry" id="masonry">
+
+    <!-- Image 1 — full-bleed featured -->
+    <div class="masonry-item featured fade-up" data-src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/Came%20a%20long%20way%20to%20be%20this%20version%20of%20myself%E2%9C%A8......%23explorepage%E2%9C%A8%20%23fypppppppppppppppppppppppppppp%20(1).jpg" data-caption="Came a long way to be this version of myself ✨">
+      <img
+        src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/Came%20a%20long%20way%20to%20be%20this%20version%20of%20myself%E2%9C%A8......%23explorepage%E2%9C%A8%20%23fypppppppppppppppppppppppppppp%20(1).jpg"
+        alt="Harpreet — full look, floral mini dress with white boots"
+        loading="lazy"
+      />
+      <div class="masonry-overlay">
+        <span class="overlay-tag">#explorepage ✨</span>
+        <span class="overlay-caption">Came a long way to be this version of myself</span>
+      </div>
+    </div>
+
+    <!-- Image 2 -->
+    <div class="masonry-item fade-up" data-src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/Came%20a%20long%20way%20to%20be%20this%20version%20of%20myself%E2%9C%A8......%23explorepage%E2%9C%A8%20%23fypppppppppppppppppppppppppppp%20(2).jpg" data-caption="Came a long way ✨ — close up">
+      <img
+        src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/Came%20a%20long%20way%20to%20be%20this%20version%20of%20myself%E2%9C%A8......%23explorepage%E2%9C%A8%20%23fypppppppppppppppppppppppppppp%20(2).jpg"
+        alt="Harpreet — close-up mirror selfie in brown strapless dress"
+        loading="lazy"
+      />
+      <div class="masonry-overlay">
+        <span class="overlay-tag">#fitnesslife</span>
+        <span class="overlay-caption">The details that do the talking</span>
+      </div>
+    </div>
+
+    <!-- Image 3 -->
+    <div class="masonry-item fade-up" data-src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/Came%20a%20long%20way%20to%20be%20this%20version%20of%20myself%E2%9C%A8......%23explorepage%E2%9C%A8%20%23fypppppppppppppppppppppppppppp%20(3).jpg" data-caption="Embroidery detail shot">
+      <img
+        src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/Came%20a%20long%20way%20to%20be%20this%20version%20of%20myself%E2%9C%A8......%23explorepage%E2%9C%A8%20%23fypppppppppppppppppppppppppppp%20(3).jpg"
+        alt="Harpreet — embroidery and floral appliqué detail"
+        loading="lazy"
+      />
+      <div class="masonry-overlay">
+        <span class="overlay-tag">#post</span>
+        <span class="overlay-caption">Every stitch, deliberate</span>
+      </div>
+    </div>
+
+    <!-- Image 4 -->
+    <div class="masonry-item fade-up" data-src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/Came%20a%20long%20way%20to%20be%20this%20version%20of%20myself%E2%9C%A8......%23explorepage%E2%9C%A8%20%23fypppppppppppppppppppppppppppp.jpg" data-caption="Soft smile, unbothered energy">
+      <img
+        src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/Came%20a%20long%20way%20to%20be%20this%20version%20of%20myself%E2%9C%A8......%23explorepage%E2%9C%A8%20%23fypppppppppppppppppppppppppppp.jpg"
+        alt="Harpreet — smiling portrait mirror selfie in tie-dye top"
+        loading="lazy"
+      />
+      <div class="masonry-overlay">
+        <span class="overlay-tag">#gymlife</span>
+        <span class="overlay-caption">Soft, but never subtle</span>
+      </div>
+    </div>
+
+    <!-- Image 5 -->
+    <div class="masonry-item fade-up" data-src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/In%20my%20%E2%80%9Cunbothered%E2%80%9D%20era.%E2%9C%A8......%23explorepage%E2%9C%A8%23fypppppppppppppppppppppppppppppppppppppppppppppppppp%20(1).jpg" data-caption="In my "unbothered" era ✨">
+      <img
+        src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/In%20my%20%E2%80%9Cunbothered%E2%80%9D%20era.%E2%9C%A8......%23explorepage%E2%9C%A8%23fypppppppppppppppppppppppppppppppppppppppppppppppppp%20(1).jpg"
+        alt="Harpreet — unbothered era, tie-dye spaghetti strap detail"
+        loading="lazy"
+      />
+      <div class="masonry-overlay">
+        <span class="overlay-tag">#unbothered ✨</span>
+        <span class="overlay-caption">In my unbothered era</span>
+      </div>
+    </div>
+
+    <!-- Image 6 -->
+    <div class="masonry-item fade-up" data-src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/In%20my%20%E2%80%9Cunbothered%E2%80%9D%20era.%E2%9C%A8......%23explorepage%E2%9C%A8%23fypppppppppppppppppppppppppppppppppppppppppppppppppp%20(2).jpg" data-caption="Full look — tie-dye asymmetric ruffle dress">
+      <img
+        src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/In%20my%20%E2%80%9Cunbothered%E2%80%9D%20era.%E2%9C%A8......%23explorepage%E2%9C%A8%23fypppppppppppppppppppppppppppppppppppppppppppppppppp%20(2).jpg"
+        alt="Harpreet — full body mirror selfie in tie-dye ruffle dress with white boots"
+        loading="lazy"
+      />
+      <div class="masonry-overlay">
+        <span class="overlay-tag">#fyp</span>
+        <span class="overlay-caption">The full look — white boots, ruffle hem</span>
+      </div>
+    </div>
+
+    <!-- Image 7 -->
+    <div class="masonry-item fade-up" data-src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/In%20my%20%E2%80%9Cunbothered%E2%80%9D%20era.%E2%9C%A8......%23explorepage%E2%9C%A8%23fypppppppppppppppppppppppppppppppppppppppppppppppppp.jpg" data-caption="In my "unbothered" era ✨ — portrait">
+      <img
+        src="https://raw.githubusercontent.com/mdimrankhanalpha/harpreet-24/main/In%20my%20%E2%80%9Cunbothered%E2%80%9D%20era.%E2%9C%A8......%23explorepage%E2%9C%A8%23fypppppppppppppppppppppppppppppppppppppppppppppppppp.jpg"
+        alt="Harpreet — portrait mirror selfie in brown floral strapless dress"
+        loading="lazy"
+      />
+      <div class="masonry-overlay">
+        <span class="overlay-tag">#explorepage ✨</span>
+        <span class="overlay-caption">In my unbothered era</span>
+      </div>
+    </div>
+
+  </div><!-- /masonry -->
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-brand">harpreet 24</div>
+  <div class="footer-ornament">✦ &nbsp;✦ &nbsp;✦</div>
+  <div class="footer-meta">
+    <div>#fitnesslife · #gymlife</div>
+    <div>#explorepage ✨</div>
+    <div>MMXXIV</div>
+  </div>
+</footer>
+
+<script>
+/* ── LIGHTBOX ── */
+const lb      = document.getElementById('lightbox');
+const lbImg   = document.getElementById('lb-img');
+const lbCap   = document.getElementById('lb-caption');
+const lbClose = document.getElementById('lb-close');
+
+document.querySelectorAll('.masonry-item').forEach(item => {
+  item.addEventListener('click', () => {
+    lbImg.src = item.dataset.src || item.querySelector('img').src;
+    lbCap.textContent = item.dataset.caption || '';
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+  item.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') item.click(); });
+  item.setAttribute('tabindex','0');
+  item.setAttribute('role','button');
+});
+
+function closeLb() {
+  lb.classList.remove('open');
+  document.body.style.overflow = '';
+  lbImg.src = '';
+}
+lb.addEventListener('click', e => { if(e.target===lb) closeLb(); });
+lbClose.addEventListener('click', closeLb);
+lbClose.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') closeLb(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeLb(); });
+
+/* ── INTERSECTION OBSERVER — FADE UP ── */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.fade-up').forEach((el, i) => {
+  el.style.transitionDelay = `${i * 0.07}s`;
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
